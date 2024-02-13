@@ -1,0 +1,75 @@
+﻿@model PaginacionRespuesta<Producto>
+@{
+	ViewData["Title"]="Productos";
+}
+
+<h1>Productos</h1>
+<div class="row">
+	<div class="col-2"><a asp-action="Crear" class="btn btn-primary mb-3">Crear</a></div>
+	<div class="col-10"><partial name="_paginacion" /></div>
+</div>
+
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+		<th scope="col">Nombre</th>
+		<th scope="col">Categoria</th>
+		<th scope="col">Regla</th>
+		<th scope="col">Fecha Creación</th>
+		<th scope="col">Estado</th>
+		<th scope="col">Acción</th>
+		
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var producto in Model.Elementos)
+		{
+			<tr>
+				<td>@producto.Nombre</td>
+				<td>@producto.NombreCategoria</td>
+				<td>@producto.NombreRegla</td>
+				<td>@producto.FechaCreacion.ToShortDateString()</td>
+				<td>
+					@if (producto.Estado==1)
+					{
+						<span class="badge badge-success">Activo</span>
+					}
+					else if (producto.Estado == 6)
+					{
+						<span class="badge badge-danger">Desactivo</span>
+					}
+					
+				</td>
+				<td><span>
+					<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@producto.Id">
+						<i class="bi-pencil-fill"
+							   data-toggle="tooltip" data-placement="left" title="Editar"></i></a>
+
+
+					@*<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@perfile.Id">*@
+							@if (producto.Estado == 1)
+							{
+								<button type="button"
+								class="btn btn-secondary"
+								data-toggle="modal"
+								data-target="@("#BorrarPartialView-"+producto.Id)"
+								data-url="@Url.Action($"BorrarPartialView/{producto.Id}")">
+
+									<i class="bi-trash-fill"
+							   data-toggle="tooltip" data-placement="right" title="Borrar"></i>
+								</button>
+								@await Html.PartialAsync("BorrarPartialView",producto)
+							}
+						   @*</a>*@
+
+
+				</span></td>
+			</tr>
+		}
+	</tbody>
+</table>
+</div>

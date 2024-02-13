@@ -1,0 +1,140 @@
+﻿@model PaginacionRespuesta<Operacion>
+@{
+	ViewData["Title"] = "Solicitudes Procesadas";
+}
+
+<h1>Solicitudes Procesadas</h1>
+
+<a asp-action="Crear" class="btn btn-primery mb-3"></a>
+<partial name="_paginacion" />
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+		<th  style="text-align: center" scope="col" class="col-1">Id</th>
+				<th style="text-align: center" scope="col" class="col-1">Producto</th>
+				<th style="text-align: center" scope="col" class="col-1">Cant.</th>
+@*		<th  style="text-align: center" scope="col">Precio</th>*@
+				<th style="text-align: center" scope="col" class="col-1">Total</th>
+				<th style="text-align: center" scope="col" class="col-1">Reembolsado</th>
+				<th style="text-align: center" scope="col" class="col-3">Descripción</th>
+				<th style="text-align: center" scope="col" class="col-1">Aprobador</th>
+				<th style="text-align: center" scope="col" class="col-1">Comprobante</th>
+@*		<th style="text-align: center" scope="col">Fecha Compra</th>
+		<th  style="text-align: center" scope="col">Fecha Creación</th>*@
+				<th style="text-align: center" scope="col" class="col-1">Fecha Procesada</th>
+				<th style="text-align: center" scope="col" class="col-1">Estado</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var operacion in Model.Elementos)
+		{
+			<tr>
+					<td style="text-align: center" class="col-1">@operacion.Id</td>
+					<td style="text-align: center" class="col-1">@operacion.NombreProducto</td>
+				<td style="text-align: center" >@operacion.Cantidad</td>
+@*				<td style="text-align: center" id="precio">@string.Format("{0:c0}",@operacion.Precio )	</td>*@
+					<td style="text-align: center" type="currency" class="col-1"> @string.Format("{0:c0}",@operacion.TotalCosto )</td>
+					<td style="text-align: center" class="col-1"> @string.Format("{0:c0}",@operacion.MontoReembolsado ) </td>
+					<td style="text-align: center" class="col-1">
+						@if (operacion.Descripcion.Length >= 10)
+						{
+
+							<p data-toggle="tooltip" data-placement="bottom" title="@operacion.Descripcion">	
+								@operacion.Descripcion.Substring(0, 10)...
+							</p>
+
+
+						}
+						else
+						{
+							@operacion.Descripcion
+						}
+
+				</td>
+					<td style="text-align: center" class="col-1">@operacion.CorreoAdministrador.Substring(0,operacion.CorreoUsuario.IndexOf("@"))</td>
+				@*<td>
+					<img src="@operacion.UrlDocumento" class="img-fluid" width="40" height="40" asp-append-version="true" />
+				</td>*@
+					<td style="text-align: center" class="col-1">
+					<a href="@Url.Content(operacion.UrlDocumento)">
+					<i class="bi bi-images"></i>
+					</a>
+				</td>
+@*				<td style="text-align: center">@operacion.FechaCompra.ToShortDateString()</td>
+				<td style="text-align: center">@operacion.FechaCreacion.ToShortDateString()</td>*@
+					<td style="text-align: center" class="col-1">
+						@if (operacion.FechaProcessed.ToShortDateString().Equals("1/1/0001"))
+							{
+							<p>/</p>
+						}else{
+					@operacion.FechaProcessed.ToShortDateString()
+						}
+					</td>
+
+					<td style="text-align: center" class="col-1">
+					@if (operacion.Estado == 1)
+					{
+						@*<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								<label class="badge badge-success mb-3">Aprobado</label>
+							</li>
+								
+						</ul>
+							if (operacion.operacionesReactivadas.Any())
+							{
+								<a class="btn btn-link btn-sm" asp-action="GetOperacionesReactivadasByIdOperacion" asp-route-Id="@operacion.Id">Reactivaciones</a>
+							}*@
+
+							<label class="badge badge-success mb-3">Aprobado</label>
+							<br />
+							if (operacion.operacionesReactivadas.Any())
+							{
+								
+								<a class="btn btn-link btn-sm" asp-action="GetOperacionesReactivadasByIdOperacion" asp-route-Id="@operacion.Id">Reactivaciones</a>
+
+							}
+
+							<br />
+@*							<a class="btn btn-link btn-sm" asp-action="GetOperacionesReactivadasByIdOperacion" asp-route-Id="@operacion.Id">Reactivaciones</a>
+*@						
+					}
+					else if (operacion.Estado == 2 )
+					{
+						
+								<label class="badge badge-danger mb-3">Rechazado</label>
+							<br />
+							if (operacion.operacionesReactivadas.Any())
+							{
+
+								<a class="btn btn-link btn-sm" asp-action="GetOperacionesReactivadasByIdOperacion" asp-route-Id="@operacion.Id">Reactivaciones</a>
+
+							}
+							<br />
+							
+						
+					}
+					@*else if (operacion.Estado == 5 )
+					{
+							<label class="badge badge-info mb-3">Reactivado</label>
+							<br />
+							<a class="btn btn-link btn-sm" asp-action="GetOperacionesReactivadasByIdOperacion" asp-route-Id="@operacion.Id">Reactivaciones</a>
+						
+						
+					}
+					else if (operacion.Estado == 4)
+					{						
+
+							<label class="badge badge-secondary mb-3">Objetada</label>
+							<br />
+							<a class="btn btn-link btn-sm" asp-action="Reactivar" asp-route-Id="@operacion.Id">Reactivar</a>
+					}*@
+
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+</div>

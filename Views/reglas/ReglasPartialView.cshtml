@@ -1,0 +1,168 @@
+﻿@model IEnumerable<Regla>
+
+@{
+	ViewData["Title"] = "Reglas";
+}
+
+
+<div class="modal fade" id="ReglasPartialView" tabindex="-1" role="dialog" aria-labelledby="ReglasPartialView" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="ReglasPartialViewTitle">Reglas de Reembolso</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+
+
+				<div class="row">
+
+					
+
+
+
+				<div class="table-responsive">
+					<table class="table table-striped">
+
+						<thead>
+							<tr>
+								<th scope="col">Id</th>
+								<th scope="col">Nombre</th>
+								<th scope="col">Antigüedad </th>
+								<th scope="col">Tope</th>
+								<th scope="col">Periodo</th>
+								<th scope="col">Tope por periodo</th>
+								<th scope="col">Descripción</th>
+								<th scope="col">Fecha Creación</th>
+								<th scope="col">Estado</th>
+								@if (User.IsInRole("GastosReembolsablesAdmin"))
+								{
+									<th scope="col">Acción</th>
+								}
+
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var regla in Model)
+							{
+								<tr>
+									<td>@regla.Id</td>
+									<td>@regla.Nombre</td>
+									<td>@regla.Antiguedad Meses</td>
+									<td>
+										@if (@regla.Veces == 0)
+										{
+											<p>Sin Limite</p>
+										}
+										else 
+										{
+											@if (regla.Veces==1)
+					{
+					<p>
+					@regla.Veces Vez </p>
+					}else{ 
+
+					<p>	@regla.Veces Veces </p>
+							}
+										}
+									</td>
+									<td>
+
+										@if (@regla.Periodo == 0)
+										{
+											<p>Sin Limite</p>
+										}
+											else if (@regla.Periodo==1)
+										{
+												<p> @regla.Periodo Mes</p>
+										}else{
+												<p> @regla.Periodo Meses</p>
+										}
+
+									</td>
+									<td>
+										@if (@regla.Tope == 0)
+										{
+											<p>Sin Limite</p>
+										}
+										else
+										{
+											@string.Format("{0:c0}",@regla.Tope )
+										}
+
+
+									</td>
+									<td>
+										@if (string.IsNullOrEmpty(regla.Descripcion))
+										{
+											<p>/</p>
+										}
+										else if (regla.Descripcion.Length >= 10)
+										{
+
+											<p data-toggle="tooltip" data-placement="bottom" title="@regla.Descripcion">
+												@regla.Descripcion.Substring(0, 10)...
+											</p>
+
+
+										}
+										else
+										{
+											@regla.Descripcion
+										}
+									</td>
+									<td>@regla.FechaCreacion.ToShortDateString()</td>
+									<td>
+										@if (regla.Estado == 1)
+										{
+											<label class="badge badge-success">Activo</label>
+										}
+										else if (regla.Estado == 2)
+										{
+											<label class="badge badge-danger">Desactivo</label>
+										}
+
+
+									</td>
+									<td>
+										<span>
+											@if (User.IsInRole("Administrador"))
+											{
+												<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@regla.Id">
+													<i class="bi-pencil-fill"
+											   data-toggle="tooltip" data-placement="left" title="Editar"></i>
+												</a>
+												<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@regla.Id">
+													<i class="bi-trash-fill"
+											   data-toggle="tooltip" data-placement="right" title="Borrar"></i>
+												</a>
+											}
+											@if (User.IsInRole("Consultor"))
+											{
+												<a class="btn-primary btn" asp-action="Visualizar" asp-route-Id="@regla.Id">
+													<i class="bi bi-eye-fill"
+											   data-toggle="tooltip" data-placement="left" title="Ver"></i>
+												</a>
+											}
+
+										</span>
+									</td>
+
+								</tr>
+							}
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				@*<button type="button" class="btn btn-primary">Save changes</button>*@
+			</div>
+		</div>
+	</div>
+</div>
+
+

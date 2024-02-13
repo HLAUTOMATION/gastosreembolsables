@@ -1,0 +1,51 @@
+﻿@model ColaboradorCreacionViewModel
+@{
+	ViewData["Title"]="Crear Colaborador";
+}
+
+<h1>Crear Colaborador</h1>
+<h5>Crear un Colaborador </h5>
+
+
+<form asp-action="Crear">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<div class="mb-3">
+		<label asp-for="Nombre" class="form-label"></label>
+		<input asp-for="Nombre" class="form-control"/>
+		<span asp-validation-for="Nombre" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="IdPerfile" class="form-label"></label>
+		<select asp-for="IdPerfile" asp-items="Model.perfiles"  class="form-control" ></select>
+		<span asp-validation-for="IdPerfile" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Correo" class="form-label"></label>
+		<input asp-for="Correo" class="form-control"/>
+		<span asp-validation-for="Correo" class="text-danger"></span>
+	</div>
+
+
+	<div class="mb-3">
+		<label asp-for="FechaContrato" class="form-label"></label>
+		<input asp-for="FechaContrato" class="form-control"/>
+		<span asp-validation-for="FechaContrato" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="IdTipoContrato" class="form-label"></label>
+		<select asp-for="IdTipoContrato" asp-items="Model.tipocontratos"  class="form-control" ></select>
+		<span asp-validation-for="IdTipoContrato" class="text-danger"></span>
+	</div>
+
+
+	<button type="submit" class="btn btn-primary">Enviar</button>
+	<a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>
+
+		@section Scripts{
+			<partial name="_ValidationScriptsPartial" />
+		}

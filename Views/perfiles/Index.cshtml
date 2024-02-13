@@ -1,0 +1,70 @@
+﻿@model PaginacionRespuesta<Perfile>
+@{
+	ViewData["Title"]="Perfiles";
+}
+
+<h1>Perfiles</h1>
+<div class="row">
+	<div class="col-2"><a asp-action="Crear" class="btn btn-primary mb-3">Crear</a></div>
+	<div class="col-10"><partial name="_paginacion"></partial></div>
+</div>
+
+
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+		<th scope="col">Nombre</th>
+		<th scope="col">Fecha Creación</th>
+		<th scope="col">Estado</th>
+		<th scope="col">Acción</th>
+	</tr>
+</thead>
+<tbody>
+		@foreach (var perfile in Model.Elementos)
+		{
+			<tr>				
+				<td>@perfile.Nombre</td>
+				<td>@perfile.FechaCreacion.ToShortDateString()</td>
+				<td>
+					@if (perfile.Estado == 1)
+					{
+						<label class="badge badge-success">Activo</label>
+					}else{
+						<label class="badge badge-danger">Desactivo</label>
+					}
+					
+					
+				</td>
+				<td><span>
+					<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@perfile.Id">
+						<i class="bi-pencil-fill"
+							   data-toggle="tooltip" data-placement="left" title="Editar"></i></a>
+
+
+@*
+						<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@perfile.Id">*@
+							@if (perfile.Estado == 1)
+							{
+								<button type="button"
+								class="btn btn-secondary"
+								data-toggle="modal"
+								data-target="@("#BorrarPartialView-"+perfile.Id)"
+								data-url="@Url.Action($"BorrarPartialView/{perfile.Id}")">
+
+									<i class="bi-trash-fill"
+							   data-toggle="tooltip" data-placement="right" title="Borrar"></i>
+								</button>
+								@await Html.PartialAsync("BorrarPartialView",perfile)
+							}
+						   @*</a>*@
+				</span></td>
+				
+			</tr>
+		}
+	</tbody>
+</table>
+
+</div>

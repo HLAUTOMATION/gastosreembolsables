@@ -1,0 +1,73 @@
+﻿
+@model AppUsuarioCreacionViewModel
+@{
+	ViewData["Title"]="Editar Usuario";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	
+}
+
+<h3>Editar Usuario</h3>
+
+
+
+<form asp-action="Editar">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="Id" />
+	
+	<div class="mb-3">
+		<label asp-for="Email" class="form-label"></label>
+		@if (User.IsInRole("GastosReembolsablesAdmin"))
+		{
+			<input asp-for="Email" class="form-control" />
+		}
+		else if (User.IsInRole("GeneralUser"))
+		{
+			<input asp-for="Email" class="form-control" readonly />
+		}
+		
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Rut" class="form-label"></label>
+		<input asp-for="Rut" class="form-control" />
+		<span asp-validation-for="Rut" class="text-danger"></span>
+	</div>
+
+
+	<div class="mb-3">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<label asp-for="FechaNacimiento" class="form-label"></label>
+		<input asp-for="FechaNacimiento" class="form-control" id="datepicker " type="date"  required />
+		<span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="TipoContrato" class="form-label"></label>
+		<select asp-for="TipoContrato" asp-items="Model.tipocontratos" class="form-control" required></select>
+		<span asp-validation-for="TipoContrato" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="FechaContrato" class="form-label"></label>
+		<input asp-for="FechaContrato" class="form-control"  />
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="IdProyecto" class="form-label"></label>
+		<select asp-for="IdProyecto" asp-items="Model.proyectos" class="form-control" required></select>
+		<span asp-validation-for="IdProyecto" class="text-danger"></span>
+	</div>
+
+	@if (User.IsInRole("GastosReembolsablesAdmin")){
+		<button type="submit" class="btn btn-primary">Confirmar</button>
+		<a class="btn btn-secondary" asp-action="">Cancelar</a>
+	}
+
+	
+</form>
+
+@section Scripts{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	}

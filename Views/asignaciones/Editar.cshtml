@@ -1,0 +1,66 @@
+﻿@model AsignacionCreacionViewModel
+@{
+	ViewData["Title"] = "Editar Asignacion";
+}
+
+<h1>Editar Asignacion</h1>
+<h5>Editar une Asignacion </h5>
+
+<form asp-action="Editar">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="Id" />
+	
+<div class="mb-3">
+		<label asp-for="IdColaborador" class="form-label"></label>
+		<select asp-for="IdColaborador" asp-items="Model.colaboradores"  class="form-control" ></select>
+		<span asp-validation-for="IdColaborador" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="enumId" class="form-label"></label>
+		<select asp-for="enumId" asp-items="Html.GetEnumSelectList<EmpresaEnum>()"  class="form-control" ></select>
+		<span asp-validation-for="enumId" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="IdProyecto" class="form-label"></label>
+		<select asp-for="IdProyecto" asp-items="Model.proyectos"  class="form-control" ></select>
+		<span asp-validation-for="IdProyecto" class="text-danger"></span>
+	</div>
+
+
+
+	<button type="submit" class="btn btn-primary">Enviar</button>
+	<a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>
+
+		@section Scripts{
+			<partial name="_ValidationScriptsPartial" />
+	@*there is still problem with the <script></script>in _layout, reason for what the the $ is not recognized*@
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+			<script>
+			const urlChangeProyectosByIdEmpresa = '@Url.Action("ChangeProyectosByIdEmpresa")';
+
+			$(function(){
+                $("#enumId").change(async function(){
+                    const valorSeleccionado = $(this).val();
+                    const respuesta = await fetch(urlChangeProyectosByIdEmpresa, {
+                        method: 'POST',
+                        body: valorSeleccionado,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+
+                    });
+                    const json = await respuesta.json();
+                    
+					
+                    const options = json.map(
+                       proyecto => `<option value=${proyecto.value}> ${proyecto.text}</option>` );
+                    
+                    $("#IdProyecto").html(options);
+				})
+			})
+			</script>
+			
+		}

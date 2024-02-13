@@ -1,0 +1,35 @@
+﻿@model AppUsuarioLoginViewModel
+
+@{
+	ViewData["Title"]="Login";
+	Layout = "_Layout.cshtml";
+
+}
+
+<h3>Login</h3>
+
+ 
+<form asp-controller="AppUsuarios" asp-action="Login" asp-route-returnurl="@ViewData[" ReturnUrl"]" >
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="mb-3">
+		<label asp-for="Email" class="form-label"></label>
+		<input asp-for="Email" class="form-control"/>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Password" class="form-label"></label>
+		<input asp-for="Password" class="form-control"/>
+	</div>
+
+	<div class="form-check">
+	<input class="form-check-input" type="checkbox" asp-for="Recuerdame"/>
+	<label class="form-check-label" asp-for="Recuerdame"></label>
+	</div>
+	<button type="submit" class="btn btn-primary">Login</button>
+	<a class="btn btn-success" asp-action="Crear">Crear Usuario</a>
+	<p><a asp-action="OlvidoPassword">Olvidaste tu contrasena?</a></p>
+</form>
+
+		@section Scripts{
+			<partial name="_ValidationScriptsPartial" />
+		}

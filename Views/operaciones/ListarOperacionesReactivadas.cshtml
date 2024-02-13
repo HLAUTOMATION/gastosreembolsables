@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Operacion>
+@{
+	ViewData["Title"] = "Solicitudes Pendientes";
+}
+
+<h1>Solicitudes</h1>
+<h5>Solicitudes pendientes a procesar</h5>
+
+<a asp-action="Crear" class="btn btn-primary mb-3">Crear</a>
+
+<table class="table">
+
+<thead>
+	<tr>
+		<th scope="col">Nombre Producto</th>
+		<th scope="col">Cantidad</th>
+		<th scope="col">Precio</th>
+		<th scope="col">Total</th>
+		<th scope="col">Tope</th>
+		<th scope="col">Descripción</th>
+		<th scope="col">Colaborador</th>
+		<th scope="col">Comprobante</th>
+		<th scope="col">Fecha Creación</th>
+
+		<th scope="col">Acción</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var operacion in Model)
+		{
+			<tr>
+				<td style="text-align: center">@operacion.NombreProducto</td>
+				<td style="text-align: center">@operacion.Cantidad</td>
+				<td style="text-align: center">@operacion.Precio</td>
+				<td style="text-align: center">@string.Format("{0:c0}",@operacion.Precio )	</td>
+				<td style="text-align: center"> @string.Format("{0:c0}",@operacion.TotalCosto )</td>
+				<td style="text-align: center">@operacion.Descripcion</td>
+				<td style="text-align: center">@operacion.ApellidoNombre</td>
+				<td style="text-align: center">
+					<img src="@operacion.UrlDocumento" class="img-fluid" width="40" height="40" asp-append-version="true" />
+				@*<img src="@Url.Content(operacion.UrlDocumento)" title="My Alt text" class="rounded-circle" width="40" height="40" />*@
+
+				@*	<img src="~/folder/boleta-electronica.jpg" title="My Alt text" class="img-fluid" width="40" height="40" />*@
+				</td>
+				<td>@operacion.FechaCreacion</td>
+
+				<td><span>
+						
+					@if (User.IsInRole("GastosReembolsablesAdmin")) 
+						
+						{
+							<a class="btn-primary btn" asp-action="Procesar" asp-route-Id="@operacion.Id">
+								<i class=" bi bi-clipboard-check"></i>
+							</a>
+							@*<a class="btn-primary btn" asp-action="Aprobar" asp-route-Id="@operacion.Id">
+								<i class=" bi bi-clipboard-check"></i>
+							</a>
+							<a class="btn-info btn" asp-action="GenerateSolicitudExcelForm" asp-route-Id="@operacion.Id">
+								<i class="bi bi-file-excel"></i>
+							</a>
+							<a class="btn-danger btn" asp-action="Rechazar" asp-route-Id="@operacion.Id">
+								<i class="bi bi-clipboard-x"></i>
+							</a>*@
+						}
+						else if (User.IsInRole("GeneralUser")) 
+						{
+							<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@operacion.Id">
+								<i class="bi-pencil-fill"></i>
+							</a>
+							<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@operacion.Id">
+								<i class="bi-trash-fill"></i>
+							</a>
+						}
+					
+				</span></td>
+			</tr>
+		}
+	</tbody>
+</table>

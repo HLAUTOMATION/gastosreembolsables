@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Cliente>
+@{
+	ViewData["Title"]="Clientes";
+}
+
+<h1>Clientes</h1>
+
+<a asp-action="Crear" class="btn btn-primary mb-3">Crear</a>
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+		
+		<th scope="col">Nombre</th>
+		<th scope="col">Correo</th>
+		<th scope="col">Empresa</th>
+		<th scope="col">Titulo</th>
+		<th scope="col">Fecha Creación</th>
+		<th scope="col">Estado</th>
+		<th scope="col">Acción</th>
+		
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var cliente in Model)
+		{
+			<tr>
+				
+				<td>@cliente.Nombre</td>
+				<td>@cliente.Correo</td>
+				<td>@cliente.NombreEmpresa</td>
+				<td>@cliente.Titulo</td>
+				<td>@cliente.FechaCreacion.ToShortDateString()</td>
+
+				<td>
+					@if (cliente.Estado==1)
+					{
+						<label class="badge badge-success">Activo</label>
+					}
+					else if (cliente.Estado == 6)
+					{
+						<label class="badge badge-danger">Desactivo</label>
+					}
+					
+				</td>
+				<td>
+					<span>
+						<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@cliente.Id">
+							<i class="bi-pencil-fill"
+						   data-toggle="tooltip" data-placement="left" title="Editar"></i>
+						</a>
+
+
+						@*<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@cliente.Id">*@
+
+							@if (cliente.Estado==1)
+							{
+								<button type="button"
+								class="btn btn-secondary"
+								data-toggle="modal"
+								data-target="@("#BorrarPartialView-"+cliente.Id)"
+								data-url="@Url.Action($"BorrarPartialView/{cliente.Id}")">
+
+									<i class="bi-trash-fill"
+							   data-toggle="tooltip" data-placement="right" title="Borrar">
+									</i>
+								</button>
+								@await Html.PartialAsync("BorrarPartialView",cliente)
+							}
+								
+						@*</a>*@
+
+
+					</span>
+
+				</td>
+				
+			</tr>
+		}
+	</tbody>
+</table>
+</div>

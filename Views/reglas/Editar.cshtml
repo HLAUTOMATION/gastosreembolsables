@@ -1,0 +1,62 @@
+﻿@model Regla
+@{
+	ViewData["Title"]="Editar Regla";
+}
+
+<h1>Editar Regla</h1>
+<h5>Editar un Regla</h5>
+
+
+<form asp-action="Editar">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="Id"/>
+
+	<div class="mb-3">
+		<label asp-for="Nombre" class="form-label"></label>
+		<input asp-for="Nombre" class="form-control"/>
+		<span asp-validation-for="Nombre" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Antiguedad" class="form-label"></label>
+		<input asp-for="Antiguedad" class="form-control"/>
+		<span asp-validation-for="Antiguedad" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Veces" class="form-label"></label>
+		<input asp-for="Veces" class="form-control"/>
+		<span asp-validation-for="Veces" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Periodo" class="form-label"></label>
+		<input asp-for="Periodo" class="form-control"/>
+		<span asp-validation-for="Periodo" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Porcentaje" class="form-label"></label>
+		<input asp-for="Porcentaje" class="form-control"/>
+		<span asp-validation-for="Porcentaje" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Tope" class="form-label"></label>
+		<input asp-for="Tope" class="form-control"/>
+		<span asp-validation-for="Tope" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Descripcion" class="form-label"></label>
+		<input asp-for="Descripcion" class="form-control"/>
+		<span asp-validation-for="Descripcion" class="text-danger"></span>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Enviar</button>
+	<a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>
+
+		@section Scripts{
+			<partial name="_ValidationScriptsPartial" />
+		}

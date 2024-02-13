@@ -1,0 +1,119 @@
+﻿@*@model SumatorioDelUsuario*@
+
+@model PaginacionRespuesta<Sumatorio>
+@{
+	ViewData["Title"] = "Sumatorio";
+}
+
+<h1>Resumen Solicitudes Pendientes</h1>
+
+<div class="row ">
+
+
+	<div class="col"><partial name="_paginacion" /></div>
+
+</div>
+
+
+<div class="table-responsive">
+<table class="table table-striped">
+	
+<thead>
+	<tr>
+				<th style="text-align: center" scope="col" class="col col-md-4">Usuario</th>
+				<th style="text-align: center" scope="col" class="col col-md-1">Periodo</th>
+				<th style="text-align: center" scope="col" class="col col-md-1">Id</th>				
+				<th style="text-align: center" scope="col" class="col col-md-1">Producto</th>
+				<th style="text-align: center" scope="col" class="col col-md-2">Estado</th>
+				<th style="text-align: center" scope="col" class="col col-md-1">Total</th>
+				
+				<th style="text-align: center" scope="col" class="col col-md-2"></th>
+		
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var sumatorio in Model.Elementos)
+		{
+				
+				@if (sumatorio.Subtotal>0 && (!(sumatorio.Id>0)&&!(sumatorio.CorreoUsuario==null)))
+
+				{
+					<tr>
+						<td style="text-align: center" class="col col-md-4"><strong>Subtotal @sumatorio.CorreoUsuario</strong></td>
+						<td style="text-align: center" class="col col-md-1"></td>
+						<td style="text-align: center" class="col col-md-1"></td>
+					
+						<td style="text-align: center" class="col col-md-1"></td>
+						<td style="text-align: center" class="col col-md-2"></td>
+						<td style="text-align: center" class="col col-md-1"><strong>@string.Format("{0:c0}",sumatorio.Subtotal )</strong>  </td>
+						
+
+						<td style="text-align: center" class="col col-md-2"></td>
+
+
+					</tr>
+
+				}
+				else if (!(sumatorio.Id >0) && (sumatorio.CorreoUsuario == null))
+				{
+					<tr>
+						<td style="text-align: center" class="col col-md-4"><strong> Total </strong></td>
+						
+						<td style="text-align: center" class="col col-md-1"></td>
+						
+						<td style="text-align: center" class="col col-md-1"></td>
+						<td style="text-align: center" class="col col-md-1"></td>
+						<td style="text-align: center" class="col col-md-2"></td>
+						<td style="text-align: center" class="col col-md-1"> <strong>@string.Format("{0:c0}",sumatorio.Subtotal )</strong></td>
+						
+						<td style="text-align: center" class="col col-md-2"></td>
+					</tr>
+				}
+				else if (sumatorio.Total>0 &&
+				!(sumatorio.CorreoUsuario==null ||
+				sumatorio.idProducto==null||
+				sumatorio.YearMonth==null||
+				sumatorio.Total==null||
+				sumatorio.NombreProducto==null)
+				
+					){
+
+					
+					<tr>
+						<td style="text-align: center" class="col col-md-4">@sumatorio.CorreoUsuario</td>
+						<td style="text-align: center" class="col col-md-1">@sumatorio.YearMonth</td>
+						<td style="text-align: center" class="col col-md-1">@sumatorio.Id</td>
+						
+						
+						<td style="text-align: center" class="col col-md-1">@sumatorio.NombreProducto</td>
+						<th style="text-align: center" scope="col" class="col col-md-2">
+							@if (sumatorio.Estado == 3)
+							{
+								<label class="badge badge-warning mb-3">Pendiente</label>
+							}
+							else if (sumatorio.Estado == 4)
+							{
+								<label class="badge badge-secondary mb-3">Objetada</label>
+							}
+							else if (sumatorio.Estado == 5)
+							{
+								<label class="badge badge-info mb-3">Reactivada</label>
+							}
+							
+
+						</th>
+						<td style="text-align: center" class="col col-md-1" type="currency">  @string.Format("{0:c0}",sumatorio.Total )</td>
+						
+						<td style="text-align: center" class="col col-md-2"></td>
+					</tr>
+				}
+				
+			
+		}
+	</tbody>
+
+
+</table>
+</div>
+</div>

@@ -1,0 +1,139 @@
+﻿@model IEnumerable<Operacion>
+@{
+	ViewData["Title"]="Historia de Solicitudes";
+}
+
+<h1>Reactivaciones de Solicitudes</h1>
+
+<a asp-action="Crear" class="btn btn-primery mb-3"></a>
+
+<div class="table-responsive">
+<table class="table">
+
+<thead>
+	<tr>
+		<th scope="col">Id</th>
+		<th scope="col">Id Operacion</th>
+		<th scope="col">Producto</th>
+		<th scope="col">Cant.</th>
+		<th scope="col">Precio</th>
+		<th scope="col">Total</th>
+		<th scope="col">Reembolsado</th>
+		<th scope="col">Desc.</th>
+		<th scope="col">Colaborador</th>
+		<th scope="col">Aprobador</th>
+		<th scope="col">Comprobante</th>
+		<th scope="col">Fecha Creación</th>
+		<th scope="col">Periodo</th>
+		<th scope="col">Fecha Processada</th>
+		<th scope="col">Estado</th>
+		<th scope="col">Acción</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var operacion in Model)
+		{
+			<tr>
+				<td>@operacion.Id</td>
+				<td>@operacion.IdOperacion</td>
+				<td>@operacion.NombreProducto</td>
+				<td>@operacion.Cantidad</td>
+				<td> @string.Format("{0:c0}",operacion.Precio ) </td>
+				<td> @string.Format("{0:c0}",operacion.TotalCosto )  </td>
+				<td> @string.Format("{0:c0}",operacion.MontoReembolsado )  </td>
+
+					<td style="text-align: center">
+						@if (operacion.Descripcion.Length >= 10)
+						{
+
+							<p data-toggle="tooltip" data-placement="bottom" title="@operacion.Descripcion">
+								@operacion.Descripcion.Substring(0, 10)...
+							</p>
+
+
+						}
+						else
+						{
+							@operacion.Descripcion
+						}
+
+					</td>
+
+				<td>@operacion.CorreoUsuario.Substring(0,operacion.CorreoUsuario.IndexOf("@"))</td>
+				
+				<td>
+					@if (string.IsNullOrEmpty(operacion.CorreoAdministrador))
+						{
+							<p>/</p>
+						}else{
+					@operacion.CorreoAdministrador.Substring(0,operacion.CorreoUsuario.IndexOf("@"))
+						}
+					</td>
+				@*<td>
+					<img src="@operacion.UrlDocumento" class="img-fluid" width="40" height="40" asp-append-version="true" />
+				</td>*@
+				
+					<td style="text-align: center">
+						@if (string.IsNullOrEmpty(operacion.UrlDocumento))
+						{
+							<p>No Hay Comprobante</p>
+						}else{
+							<a href="@Url.Content(operacion.UrlDocumento)">
+								<i class="bi bi-images"></i>
+							</a>
+						}
+						
+						</td>
+				
+				<td>@operacion.FechaCreacion.ToShortDateString()</td>
+				<td>@operacion.yearmonth</td>
+				<td>
+
+					@if (string.IsNullOrEmpty(@operacion.FechaProcessed.ToString()))
+					{
+						<p>/</p>
+					}else{
+						@operacion.FechaProcessed.ToShortDateString();
+					}
+
+
+					
+				</td>
+				<td>
+
+					@if (operacion.Estado == 3)
+					{
+						<label class="badge badge-warning mb-3">Pendiente</label>
+					}
+					else if (operacion.Estado == 1)
+					{
+						<label class="badge badge-success mb-3">Aprobado</label>
+					}
+					else if (operacion.Estado == 2)
+					{
+						<label class="badge badge-danger mb-3">Rechazado</label>
+					}
+
+					else if (operacion.Estado == 4)
+					{
+						<label class="badge badge-danger mb-3">On Hold</label>
+					}
+				</td>
+				<td>
+					@if (operacion.Estado==3)
+					{
+						<a class="btn btn-primary" asp-action="ProcesarOperacionReactivada" asp-route-Id="@operacion.Id">
+								<i class=" bi bi-clipboard-check"
+						   data-toggle="tooltip" data-placement="left" title="Procesar"></i>
+						</a>
+					}
+										
+					</td>
+			</tr>
+			
+		}
+
+	</tbody>
+</table>
+</div>

@@ -1,0 +1,195 @@
+﻿@model OperacionCreacionViewModel
+@{
+	ViewData["Title"] = "Aprobar Solicitud";
+
+	
+}
+
+
+<div class="row">
+	
+
+<h1>Procesar Solicitud</h1>
+	
+
+<button type="button"
+				class="btn btn-circle"
+				data-toggle="modal"
+				data-target="#ReglasPartialView">
+
+			<i class="bi bi-info-circle" data-toggle="tooltip" data-placement="right" title="Reglas Reembolso"></i>
+
+		</button>
+	
+</div>
+
+@if (TempData["AlertForBlock"] != null)
+{
+	@*<div class="alert alert-warning" id="MyModalSuccess">
+		<strong> Blocked! </strong>	@TempData["AlertForBlock"]
+	</div>*@
+
+	<!-- Modal HTML -->
+	<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-danger-subtle  ">
+
+					<button type="button" class="btn btn-light" data-bs-dismiss="modal">
+						<i class="bi bi-x"></i>
+					</button>
+				</div>
+				<div class="modal-body text-center">
+					<div>
+						<h1 class="modal-title fs-5 " id="staticBackdropLabel">
+							
+
+							<i class="bi bi-exclamation-lg text-danger" style="font-size:100px"></i>
+						</h1>
+					</div>
+					<h6>
+
+						@TempData["AlertForBlock"]
+					</h6>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<a class="btn btn-outline-danger" asp-action="Index">Solicitudes Pendientes</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+}
+
+
+
+
+<form  method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<input type="hidden" asp-for="Id" />
+
+	<div class="mb-3">
+		<label asp-for="CorreoUsuario" class="form-label"></label>
+		<input asp-for="CorreoUsuario" class="form-control" readonly />
+		<span asp-validation-for="CorreoUsuario" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="NombreProducto" class="form-label"></label>
+		<select asp-for="IdProducto" asp-items="Model.productos" class="form-control" disabled></select>
+		<span asp-validation-for="IdProducto" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Cantidad" class="form-label"></label>
+		<input asp-for="Cantidad" class="form-control" readonly />
+		<span asp-validation-for="Cantidad" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Precio" class="form-label"></label>
+		@*<input asp-for="Precio" class="form-control"  id="precio" value=" @string.Format("{0:c0}",Model.Precio )" readonly />*@
+		<input asp-for="Precio" class="form-control"  id="precio"  readonly />
+		
+		@*<span asp-validation-for="Precio" class="text-danger"></span>*@
+	</div>
+	<div class="mb-3">
+		<label asp-for="TotalCosto" class="form-label"></label>
+		@*<input asp-for="TotalCosto" class="form-control" id="total" value=" @string.Format("{0:c0}",Model.TotalCosto )" readonly />*@
+		<input asp-for="TotalCosto" class="form-control" id="total"  readonly />
+		@*<span asp-validation-for="TotalCosto" class="text-danger"></span>*@
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Descripcion" class="form-label"></label>
+		<input asp-for="Descripcion" class="form-control" readonly />
+		<span asp-validation-for="Descripcion" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="UrlDocumento" class="form-label"></label>
+
+		<span asp-validation-for="UrlDocumento" class="text-danger"></span>
+
+		<div class="card" style="width: 18rem;">
+
+			<div class="card-body">
+
+				<img src="@Model.UrlDocumento" class="card-img-top" asp-append-version="true" />
+
+			</div>
+		</div>
+	</div>
+	<div class="mb-3">
+		<label asp-for="MontoReembolsado" class="form-label"></label>
+		
+		<input asp-for="MontoReembolsado" class="form-control" id="montoReembolsado" type="number"  required />
+		<p id="currency"></p>
+		<span asp-validation-summary="MontoReembolsado" class="text-danger"></span>
+		@await Html.PartialAsync("../Reglas/ReglasPartialView",Model.reglas)
+	</div>
+
+
+
+	
+
+	<div class="mb-3" id="comentario">
+		<label asp-for="Comentario" class="form-label"></label>
+		<input asp-for="Comentario" class="form-control"  />
+		<span asp-validation-for="Comentario" class="text-danger"></span>
+	</div>
+
+	<button type="submit" class="btn btn-primary" asp-action="Aprobar" asp-route-Id="@Model.Id" >Aprobar</button>
+
+	
+	@*<button 
+		type="submit" 
+		class="btn btn-primary" 
+		asp-action="Aprobar" 
+		asp-route-Id="@Model.Id"
+		data-toggle="modal"
+	data-target="@("#AprobarPartialView-"+Model.Id)"
+	data-url="@Url.Action($"Aprobar/{Model.Id}")">Aprobar</button>
+
+	@await Html.PartialAsync("AprobarPartialView",Model.Id)*@
+
+	<button type="submit" class="btn btn-danger" asp-action="Rechazar" asp-route-Id="@Model.Id">Rechazar</button>
+	
+	<button type="submit" class="btn btn-warning" asp-action="OnHold" asp-route-Id="@Model.Id" >On Hold</button>
+	<a class="btn btn-secondary" asp-action="Index" id="cancelar">Cancelar</a>
+
+
+	
+
+</form>
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial" />
+	<script type="text/javascript">
+		document.getElementById('montoReembolsado').addEventListener(
+			'change', () => {
+				document.getElementById('currency').innerHTML = new Intl.NumberFormat(
+					'es-CL', {
+					style: 'currency',
+					currency: 'CLP',
+					minimumFractionDigits: 0
+				}
+				).format(document.getElementById('montoReembolsado').value);
+			}
+		);
+
+		$(document).ready(
+			function () {
+
+				var TempAlert = "@TempData["AlertForBlock"]";
+				if (TempAlert) {
+					$("#exampleModal").modal('show');
+				}
+			}
+		);
+	
+		
+	</script>
+	
+
+	
+		}

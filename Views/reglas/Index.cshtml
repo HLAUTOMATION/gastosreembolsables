@@ -1,0 +1,151 @@
+﻿@model PaginacionRespuesta<Regla>
+@{
+	ViewData["Title"]="Reglas";
+}
+
+<h1>Reglas de Reembolsos</h1>
+
+<div class="row">
+
+	@if (User.IsInRole("GastosReembolsablesAdmin")){
+		@*<div class="col-2"><a asp-action="Crear" class="btn btn-primary mb-3">Crear</a></div>*@
+	}
+	
+	<div class="col"><partial name="_paginacion" /></div>
+</div>
+
+
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+	@*	<th scope="col">Id</th>*@
+				
+		<th scope="col" style="text-align: center" class="col-1">Nombre</th>
+		<th scope="col" style="text-align: center" class="col-1">Antigüedad </th>
+		<th scope="col" style="text-align: center" class="col-1">Tope</th>
+		<th scope="col" style="text-align: center" class="col-1">Periodo</th>
+		<th scope="col" style="text-align: center" class="col-2">Tope por periodo</th>
+		<th scope="col" style="text-align: center" class="col-4">Descripción</th>
+		<th scope="col" style="text-align: center" class="col-1">Fecha Creación</th>
+		<th scope="col" style="text-align: center" class="col-1">Estado</th>
+		@if (User.IsInRole("GastosReembolsablesAdmin"))
+			{
+				<th scope="col">Acción</th>
+			}
+					
+	</tr>
+</thead>
+<tbody>
+		@foreach (var regla in Model.Elementos)
+		{
+			<tr>
+				@*<td>@regla.Id</td>*@
+					<td style="text-align: center" class="col-1">@regla.Nombre</td>
+					<td style="text-align: center" class="col-1">@regla.Antiguedad Meses</td>
+					<td style="text-align: center" class="col-1">
+					@if (@regla.Veces==0)
+					{
+						<p>Sin Limite</p>
+					}else{
+
+					
+					@if (regla.Veces==1)
+					{
+					<p>
+					@regla.Veces Vez </p>
+					}else{ 
+
+					<p>	@regla.Veces Veces </p>
+							}
+					}
+					</td>
+					<td style="text-align: center" class="col-1">
+					
+					@if (@regla.Periodo==0)
+					{
+						<p>Sin Límite</p>
+					}
+					else
+					{
+						@regla.Periodo
+					}
+					
+				</td>
+				<td style="text-align: center" class="col-2">
+						@if (@regla.Tope == 0)
+						{
+							<p>Sin Limite</p>
+						}
+						else
+						{
+							@string.Format("{0:c0}",@regla.Tope )							
+						}
+
+					
+				</td>
+					<td style="text-align: center" class="col-4">
+						@if (string.IsNullOrEmpty(regla.Descripcion)) {
+							<p>/</p>
+						}
+						else if( regla.Descripcion.Length >= 50)
+						{
+
+							<p data-toggle="tooltip" data-placement="bottom" title="@regla.Descripcion">
+								@regla.Descripcion.Substring(0, 50)...
+							</p>
+
+
+						}
+						else
+						{
+							@regla.Descripcion
+						}
+				</td>
+					<td style="text-align: center" class="col-1">@regla.FechaCreacion.ToShortDateString()</td>
+					<td style="text-align: center" class="col-1">
+					@if (regla.Estado==1)
+					{
+						<label class="badge badge-success">Activo</label>
+					}
+					else if (regla.Estado == 2)
+					{
+						<label class="badge badge-danger">Desactivo</label>
+					}
+					
+					
+				</td>
+				<td>
+					<span>
+						@if (User.IsInRole("Administrador"))
+						{
+							<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@regla.Id">
+							<i class="bi-pencil-fill"
+							   data-toggle="tooltip" data-placement="left" title="Editar"></i>
+						</a>
+						<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@regla.Id">
+							<i class="bi-trash-fill"
+							   data-toggle="tooltip" data-placement="right" title="Borrar"></i>
+						</a>
+						}
+						@if (User.IsInRole("Consultor"))
+						{
+							<a class="btn-primary btn" asp-action="Visualizar" asp-route-Id="@regla.Id">
+								<i class="bi bi-eye-fill"
+							   data-toggle="tooltip" data-placement="left" title="Ver"></i>
+							</a>
+						}
+						
+					</span>
+				</td>
+				
+			</tr>
+		}
+	</tbody>
+</table>
+
+</div>
+
+					

@@ -1,0 +1,99 @@
+﻿@model AppUsuario
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center ">
+
+    @if (User.IsInRole("GeneralUser") && (Model.Antiguedad>4 || Model.TipoContrato==1)){
+        <h1 class="display-4">Solicitar Reembolso </h1>
+        @*<div class="row">
+            <div class="col">
+            
+            <div style="padding-top : 80px; padding-bottom : 50px" align="right">
+                <a type="button" class="btn  btn-lg btn-primary" asp-action="Crear" asp-controller="Operaciones">
+                    Crear Nueva Solicitud
+                </a>
+            </div>          
+            </div>
+
+            <div class="col">
+            <div style="padding-top : 80px ; padding-bottom : 50px" align="left">
+                <a type="button" class="btn  btn-lg btn-primary" asp-action="HistoriaByIdAppUsuario" asp-controller="Operaciones">
+                    Revisar Historial/Reactivar Solicitud
+                </a>
+            </div>
+            </div>
+            </div>*@
+
+        <div class="d-grid gap-2 col-5 mx-auto" style="padding:100px">
+
+            <a type="button" style="margin-bottom : 20px" class="btn btn-primary btn-lg btn-block " asp-action="Crear" asp-controller="Operaciones">
+                Crear Nueva Solicitud
+            </a>
+
+            <a type="button" style="margin-bottom : 20px" class="btn btn-primary btn-lg btn-block " asp-action="GetOperacionesByCorreoUsuario" asp-controller="Operaciones">
+                Solicitudes Pendientes
+            </a>
+
+            <a type="button" class="btn btn-primary btn-lg btn-block" asp-action="HistoriaByIdAppUsuario" asp-controller="Operaciones">
+                Revisar Historial
+            </a>
+
+        </div>
+        
+        
+    }
+    else if ((User.IsInRole("GeneralUser") && Model.Antiguedad <= 4) || (User.IsInRole("GeneralUser") && Model.TipoContrato == 2))
+    {
+        <h1 class="display-4">Solicitas tu reembolso en algunos clicks </h1>
+        <div style="padding-top : 80px ; padding-bottom : 50px" align="center">
+
+            <h5>Tiene que tener antiguedad de 4 meses para poder solicitar el reembolso, por el momento, su antiguedad esta @Model.Antiguedad mese(s)</h5>
+
+        </div>
+    }
+    @if (User.IsInRole("GastosReembolsablesAdmin")){
+    <h1 class="display-4">Procesar Solicitudes </h1>
+
+@*    <div class="row">
+
+            <div class="col ">
+                <div style="padding-top : 80px ; padding-bottom : 50px " align="right" >
+                    <a type="button" class="btn  btn-lg btn-outline-secondary " asp-action="Index" asp-controller="Operaciones">
+                       Procesar Solicitudes Pendientes   
+                    </a>
+                </div>
+    </div>
+    <div class="col">
+                <div style="padding-top : 80px ; padding-bottom : 50px" align="left">
+                 <a type="button" class="btn  btn-lg btn-outline-secondary" asp-action="Historia" asp-controller="Operaciones" >
+                        Solicitudes Historicas/Reactivaciones
+                  </a>
+                </div>
+
+               
+    </div>
+    </div>*@
+
+        <div class="d-grid gap-2 col-5 mx-auto" style="padding:100px">
+
+                <a type="button" style="margin-bottom : 20px" class="btn btn-primary btn-lg btn-block " asp-action="Index" asp-controller="Operaciones">
+                    Procesar Solicitudes Pendientes
+                </a>
+            
+                <a type="button" class="btn btn-primary btn-lg btn-block" asp-action="Historia" asp-controller="Operaciones">
+                    Solicitudes Historicas
+                </a>
+          
+            </div>
+
+       
+    }
+
+
+    
+    
+</div>
+
+

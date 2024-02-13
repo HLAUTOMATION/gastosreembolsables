@@ -1,0 +1,54 @@
+﻿@model AppUsuario
+@{
+	ViewData["Title"] = "Cuentas del Usuario";
+}
+
+<h4>Cuentas Bancarias del Colaborador</h4>
+
+<a asp-action="Crear" class="btn btn-primery mb-3"></a>
+
+<table class="table">
+
+	<thead>
+		<tr>
+			<th scope="col">Banco</th>
+			<th scope="col">Numero Cuenta</th>
+			<th scope="col">Tipo Cuenta</th>
+			<th scope="col">Colaborador</th>
+			<th scope="col">Fecha Creacion</th>
+			<th scope="col">Fecha Fin</th>
+			<th scope="col">Estado</th>
+
+
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var cuenta in Model.cuentas)
+		{
+			<tr>
+				<td>@cuenta.NombreBanco</td>
+				<td>@cuenta.NumeroCuenta</td>
+				<td>@cuenta.TipoCuenta</td>
+				<td>@cuenta.IdColaborador</td>
+				<td>@cuenta.FechaCreacion</td>
+				<td>@cuenta.FechaFin</td>
+				<td>
+					@if (cuenta.Estado == 1)
+					{
+						<label class="badge badge-success">Activo</label>
+					}
+					else if (cuenta.Estado == 2)
+					{
+						<label class="badge badge-danger">Desactivo</label>
+					}
+				</td>
+
+			</tr>
+		}
+	</tbody>
+</table>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

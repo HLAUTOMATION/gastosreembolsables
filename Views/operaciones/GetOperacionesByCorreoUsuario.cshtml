@@ -1,0 +1,182 @@
+﻿@model PaginacionRespuesta<Operacion>
+@using System.Security.Claims
+@using GASTOS_REEMBOLSABLES_VMICA.Models;
+@{
+	ViewData["Title"] = "Solicitudes Pendientes";
+}
+
+<h1>Solicitudes Pendientes</h1>
+
+<div class="row"> 
+<div class="col">
+
+		@if (User.IsInRole("GeneralUser")){ 
+			@if ( Model.appUsuario.Antiguedad>4 || Model.appUsuario.TipoContrato==1)
+		{
+			<a asp-action="Crear" class="btn btn-primary mb-3">Crear</a>
+		}
+		}
+	
+</div>
+<div class="col">
+	<partial name="_paginacion" />
+</div>
+</div>
+
+@*@if (TempData["AlertForBlock"] != null)
+{
+	<div class="alert alert-warning">
+		<strong> Blocked! </strong>	@TempData["AlertForBlock"]
+	</div>
+}*@
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+		<th style="text-align: center" scope="col" class="col-1" >Id</th>
+				<th style="text-align: center" scope="col" class="col-1">Producto</th>
+				<th style="text-align: center" scope="col" class="col-1">Cant.</th>
+@*		<th style="text-align: center" scope="col">Precio</th>*@
+				<th style="text-align: center" scope="col" class="col-1">Total</th>
+				<th style="text-align: center" scope="col" class="col-3">Descripción</th>
+				<th style="text-align: center" scope="col" class="col-1">Comprobante</th>
+				<th style="text-align: center" scope="col" class="col-1">Fecha Compra</th>
+		<th style="text-align: center" scope="col" class="col-1" >Fecha Creación</th>
+
+
+				<th style="text-align: center"  scope="col" class="col-1">Estado</th>
+				<th style="text-align: center" scope="col" class="col-1">Acción</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var operacion in Model.Elementos)
+		{
+			<tr>
+					<td style="text-align: center" class="col-1" >@operacion.Id</td>
+					<td style="text-align: center" class="col-1">@operacion.NombreProducto</td>
+					<td style="text-align: center" class="col-1">@operacion.Cantidad</td>
+@*				<td style="text-align: center">@string.Format("{0:c0}",@operacion.Precio)      </td>*@
+					<td style="text-align: center" class="col-1">@string.Format("{0:c0}",@operacion.TotalCosto ) </td>
+					<td style="text-align: center" class="col-3">
+						@if (operacion.Descripcion.Length >= 50)
+						{
+
+							<p data-toggle="tooltip" data-placement="bottom" title="@operacion.Descripcion">
+								@operacion.Descripcion.Substring(0, 50)...
+							</p>
+
+
+						}
+						else
+						{
+							@operacion.Descripcion
+						}
+
+				</td>
+				@*<td>
+				
+				<img src="@Url.Content(operacion.UrlDocumento)" class="rounded-fluid" width="40" height="40" />
+				</td>*@
+					<td style="text-align: center" class="col-1">
+						<a href="@Url.Content(operacion.UrlDocumento)">
+					<i class="bi bi-images"></i> 
+						</a>
+					</td>
+					<td style="text-align: center" class="col-1">@operacion.FechaCompra.ToShortDateString()</td>
+					<td style="text-align: center" class="col-1">@operacion.FechaCreacion.ToShortDateString()</td>
+				
+
+					<td style="text-align: center" class="col-1">
+						@if (operacion.Estado==3)
+						{
+							<label class="badge badge-warning mb-3">Pendiente</label>
+						}
+						else if (operacion.Estado==4)
+						{
+							<label class="badge badge-secondary mb-3">Objetada</label>
+							<br />
+							<a class="btn btn-link btn-sm" asp-action="Reactivar" asp-route-Id="@operacion.Id">Reactivar</a>
+						}
+						else if (operacion.Estado == 5)
+						{
+							<label class="badge badge-info mb-3">Reactivada</label>
+							<br />
+							<a class="btn btn-link btn-sm" asp-action="GetOperacionesReactivadasByIdOperacion" asp-route-Id="@operacion.Id">Reactivaciones</a>
+						}
+					
+					
+					</td>
+					<td style="text-align: center" class="col-1">
+						<span>
+					
+					@if (User.IsInRole("GastosReembolsablesAdmin")) 
+						
+						{
+							<a class="btn-primary btn" asp-action="Aprobar" asp-route-Id="@operacion.Id">
+								<i class=" bi bi-clipboard-check"></i>
+							</a>
+							<a class="btn-danger btn" asp-action="Rechazar" asp-route-Id="@operacion.Id">
+								<i class="bi bi-clipboard-x"></i>
+							</a>
+
+
+						}
+						else if(User.IsInRole("GeneralUser") && operacion.Estado==3)
+						{
+								<div class="row">
+									<a class="btn-primary btn" asp-controller="Operaciones" asp-action="Editar" asp-route-Id="@operacion.Id" style="margin-right:3px">
+										<i class="bi-pencil-fill "  data-toggle="tooltip" data-placement="left" title="Editar" ></i>
+									</a>
+
+									@*<form method="post">
+
+										<button type="submit" class="btn btn-secondary" asp-controller="Operaciones" asp-action="Borrar" asp-route-Id="@operacion.Id">
+											<i class="bi-trash-fill"  data-toggle= "tooltip" data-placement="right" title="Borrar" ></i>
+										</button>
+									</form>*@
+
+
+									<button 
+										onclick="sweetalert()"
+										
+										type="button" 
+										class="btn btn-secondary" 
+										data-toggle="modal"
+										data-target="@("#BorrarPartialView-"+operacion.Id)"
+										data-url="@Url.Action($"BorrarPartialView/{operacion.Id}")"
+										
+										
+									>								
+									
+										
+										<i class="bi-trash-fill" data-toggle="tooltip" data-placement="right" title="Borrar"></i>
+										</button>
+										
+								
+
+								</div>
+								@await Html.PartialAsync("BorrarPartialView",operacion)
+						}
+					
+				</span></td>
+			</tr>
+		}
+	</tbody>
+</table>
+</div>
+
+<script>
+
+function sweetalert(){
+
+		Swal.fire({
+			icon: 'warning',
+			title: 'Atención',
+			text: 'Estas seguro de borrar esta solicitud ?',
+			//footer: '<a href="">Why do I have this issue?</a>'
+		})
+}									
+</script>				

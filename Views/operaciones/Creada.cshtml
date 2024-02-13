@@ -1,0 +1,131 @@
+﻿@model OperacionCreacionViewModel
+@{
+	ViewData["Title"]="Editar Solicitud";
+}
+
+<h1>Solicitud Creada</h1>
+
+
+
+@if (TempData["AlertForBlock"] != null)
+{
+	<!-- Modal HTML -->
+	<div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-info-subtle  ">
+					<button type="button" class="btn btn-light" data-bs-dismiss="modal">
+						<i class="bi bi-x"></i>
+						</button>
+				</div>
+				<div class="modal-body text-center">
+					<div>
+						<h1 class="modal-title fs-5 " id="staticBackdropLabel">
+							<i class="bi bi-check2-circle text-info" style="font-size:100px"></i>
+						</h1>
+					</div>
+					<h6>
+
+						@TempData["AlertForBlock"]
+					</h6>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<a class="btn btn-outline-info" asp-action="GetOperacionesByCorreoUsuario">Solicitudes Pendientes</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+}
+
+<form asp-action="Editar" enctype="multipart/form-data">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<input type="hidden" asp-for="Id" />
+
+	<div class="mb-3">
+		<label asp-for="IdProducto" class="form-label"></label>
+			<select asp-for="IdProducto" asp-items="Model.productos" class="form-control" disabled></select>	
+		<span asp-validation-for="IdProducto" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Cantidad" class="form-label"></label>
+		<input asp-for="Cantidad" class="form-control" readonly/>
+		<span asp-validation-for="Cantidad" class="text-danger"></span>
+	</div>
+	
+
+	<div class="mb-3">
+		<label asp-for="Precio" class="form-label"></label>
+		@*<input asp-for="Precio" class="form-control" type="currency" id="currency"  required />*@
+		<input asp-for="Precio" class="form-control" id="precio" type="number" readonly />
+		<p id="currency"></p>
+		<span asp-validation-for="Precio" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<label asp-for="FechaCompra" class="form-label"></label>
+		<input asp-for="FechaCompra" class="form-control" type="date" readonly />
+		<span asp-validation-for="FechaCompra" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="UrlDocumento" class="form-label"></label>
+
+		<span asp-validation-for="UrlDocumento" class="text-danger"></span>
+
+		<div class="card" style="width: 18rem;">
+
+			<div class="card-body">
+
+				<img src="@Model.UrlDocumento" class="card-img-top" asp-append-version="true" />
+
+			</div>
+		</div>
+	</div>
+
+	
+		
+	<div class="mb-3">
+		<label asp-for="Descripcion" class="form-label"></label>
+		<input asp-for="Descripcion" class="form-control" readonly/>
+		<span asp-validation-for="Descripcion" class="text-danger"></span>
+	</div>
+	<div style="margin-bottom: 5px">
+
+	<a class="btn btn-outline-primary" asp-action="GetOperacionesByCorreoUsuario">Solicitudes Pendientes</a>
+		<a class="btn btn-primary" asp-action="Crear">Crear Nueva Solicitud</a>
+	</div>
+
+	@*<a class="btn btn-secondary" asp-action="GetOperacionesByCorreoUsuario">Cancelar</a>*@
+	
+</form>
+
+		@section Scripts{
+			<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		document.getElementById('precio').addEventListener(
+			'change', () => {
+				document.getElementById('currency').innerHTML = new Intl.NumberFormat(
+					'en-US', {
+					style: 'currency',
+					currency: 'USD',
+					minimumFractionDigits: 0
+				}
+				).format(document.getElementById('precio').value);
+			}
+		);
+
+		$(document).ready(
+			function () {
+
+				var TempAlert = "@TempData["AlertForBlock"]";
+				if (TempAlert) {
+					$("#exampleModal").modal('show');
+				}
+			}
+		);
+
+	</script>
+		}

@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Operacion>
+@using System.Security.Claims
+@using GASTOS_REEMBOLSABLES_VMICA.Models;
+@{
+	ViewData["Title"] = "Solicitudes Pendientes";
+}
+
+<h1>Solicitudes Reactivadas</h1>
+
+@if (ViewBag.appUsuario>4)
+{
+	<a asp-action="Crear" class="btn btn-primary mb-3">Crear</a>
+}
+
+<div class="table-responsive">
+
+<table class="table">
+
+<thead>
+	<tr>
+		<th style="text-align: center" scope="col" class="col-1">Id</th>
+		<th style="text-align: center" scope="col" class="col-1">IdOperacion</th>
+		<th style="text-align: center" scope="col" class="col-1">Producto</th>
+		<th style="text-align: center" scope="col" class="col-1">Cant.</th>
+@*		<th style="text-align: center" scope="col" class="col-1">Precio</th>*@
+		<th style="text-align: center" scope="col" class="col-1">Total</th>
+		<th style="text-align: center" scope="col" class="col-1">Monto Reembolsado</th>
+		<th style="text-align: center" scope="col" class="col-2">Descripción</th>
+		<th style="text-align: center" scope="col" class="col-1">Comprobante</th>
+		<th style="text-align: center" scope="col" class="col-1">Fecha Processada</th>
+		<th style="text-align: center" scope="col" class="col-1">Estado</th>
+		<th style="text-align: center" scope="col" class="col-1">Acción</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var operacion in Model)
+		{
+			<tr>
+				<td style="text-align: center" class="col-1" >@operacion.Id</td>
+				<td style="text-align: center" class="col-1" >@operacion.IdOperacion</td>
+				<td style="text-align: center" class="col-1" >@operacion.NombreProducto</td>
+				<td style="text-align: center" class="col-1" >@operacion.Cantidad</td>
+				@*	<td type="currency">@string.Format("{0:c0}",operacion.Precio )  </td>*@
+					<td style="text-align: center" class="col-1" >@string.Format("{0:c0}",@operacion.TotalCosto )</td>
+					<td style="text-align: center" class="col-1" > @string.Format("{0:c0}",@operacion.MontoReembolsado )</td>
+				<td style="text-align: center" class="col-2" >
+						@if (operacion.Descripcion.Length >= 10)
+						{
+
+							<p data-toggle="tooltip" data-placement="bottom" title="@operacion.Descripcion"> 	
+								@operacion.Descripcion.Substring(0, 10)...
+								</p>
+
+
+						}
+						else
+						{
+							@operacion.Descripcion
+						}
+				</td>
+				<td style="text-align: center" class="col-1" >
+				@*<img src="@operacion.UrlDocumento" class="rounded-circle" width="40" height="40" asp-append-version="true"/>*@
+				<img src="@Url.Content(operacion.UrlDocumento)" class="rounded-fluid" width="40" height="40" />
+				</td>
+				@*<td style="text-align: center" class="col-1" >@operacion.FechaCompra.ToShortDateString()</td>
+				<td style="text-align: center" class="col-1" >@operacion.FechaCreacion.ToShortDateString()</td>*@
+
+					@if (@operacion.FechaProcessed.ToShortDateString()=="1/1/0001")
+					{
+						<td style="text-align: center" class="col-1">/</td>
+					}else{
+
+				<td style="text-align: center" class="col-1" >@operacion.FechaProcessed.ToShortDateString()</td>
+					}
+
+				<td style="text-align: center" class="col-1" >
+
+						@if (operacion.Estado==1)
+						{
+							<label class="badge badge-success mb-3">Aprobado</label>
+						}
+						else if (operacion.Estado==2)
+						{
+							<label class="badge badge-danger mb-3">Rechazada</label>
+						}
+						else if (operacion.Estado == 3)
+						{
+							<label class="badge badge-warning mb-3">Pendiente</label>
+						}
+				</td>
+				<td style="text-align: center" class="col-1" ><span>
+					
+					@if (User.IsInRole("GastosReembolsablesAdmin")) 
+						
+						{
+							<a class="btn-primary btn" asp-action="Aprobar" asp-route-Id="@operacion.Id">
+								<i class=" bi bi-clipboard-check"></i>
+							</a>
+							<a class="btn-danger btn" asp-action="Rechazar" asp-route-Id="@operacion.Id">
+								<i class="bi bi-clipboard-x"></i>
+							</a>
+						}
+						else if(User.IsInRole("GeneralUser") && operacion.Estado==3)
+
+
+						{
+							<div class="row">
+								
+							<a class="btn-primary btn" asp-controller="Operaciones" asp-action="EditarOperacionReactivada" asp-route-Id="@operacion.Id" style="margin-right:3px">
+										<i class="bi-pencil-fill"></i>
+									</a>
+
+							
+							
+							<form>
+							<button type="submit" class="btn btn-secondary"  asp-action="Borrar" asp-route-Id="@operacion.Id">
+											<i class="bi-trash-fill"></i>
+										</button>
+									</form>
+									
+							</div>
+						}
+					
+				</span></td>
+			</tr>
+		}
+	</tbody>
+</table>
+</div>

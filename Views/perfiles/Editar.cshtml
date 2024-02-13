@@ -1,0 +1,24 @@
+﻿@model Perfile
+@{
+	ViewData["Title"]="Editar Perfile";
+}
+
+<h1>Editar Perfile</h1>
+<h5>Editar un Perfile</h5>
+
+<form asp-action="Crear">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<input type="hidden" asp-for="Id" />
+	<div class="mb-3">
+		<label asp-for="Nombre" class="form-label"></label>
+		<input asp-for="Nombre" class="form-control"/>
+		<span asp-validation-for="Nombre" class="text-danger"></span>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Enviar</button>
+	<a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>
+
+		@section Scripts{
+			<partial name="_ValidationScriptsPartial" />
+		}

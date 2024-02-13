@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Categoria>
+@{
+	ViewData["Title"]="Categorias";
+}
+
+<h1>Categorias</h1>
+
+<a asp-action="Crear" class="btn btn-primary mb-3">Crear</a>
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+		<th scope="col">Nombre</th>
+		<th scope="col">Fecha Creación</th>
+		<th scope="col">Estado</th>
+		<th scope="col">Acción</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var categoria in Model)
+		{
+			<tr>
+				
+				<td>@categoria.Nombre</td>
+				<td>@categoria.FechaCreacion.ToShortDateString()</td>
+				<td>
+					@if (categoria.Estado==1)
+					{
+						<span class="badge badge-success">Activo</span>
+					}
+					else if (categoria.Estado==6)
+					{
+						<span class="badge badge-danger">Desactivo</span>
+					}
+					
+					</td>
+
+
+				<td><span>
+					<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@categoria.Id">
+						<i class="bi-pencil-fill"
+						   data-toggle="tooltip" data-placement="left" title="Editar"></i></a>
+@*
+					<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@categoria.Id">
+*@						
+							@if (categoria.Estado == 1)
+							{
+								<button type="button"
+								class="btn btn-secondary"
+								data-toggle="modal"
+								data-target="@("#BorrarPartialView-"+categoria.Id)"
+								data-url="@Url.Action($"BorrarPartialView/{categoria.Id}")">
+								<i class="bi-trash-fill"
+							   data-toggle="tooltip" data-placement="right" title="Borrar">
+								</i>
+								</button>
+								@await Html.PartialAsync("BorrarPartialView",categoria)
+							}
+					   @*</a>*@
+				</span></td>
+			</tr>
+		}
+	</tbody>
+</table>
+</div>

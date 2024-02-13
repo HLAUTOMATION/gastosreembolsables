@@ -1,0 +1,92 @@
+﻿@model PaginacionRespuesta<AppUsuario>
+@{
+	ViewData["Title"]="Usuarios";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Usuarios</h1>
+<div class="row">
+	<div class="col-2"><a asp-action="Crear" class="btn btn-primary mb-3">Crear</a></div>
+	<div class="col-10"><partial name="_paginacion" /></div>
+</div>
+
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+			
+
+
+			<th scope="col">Correo</th>
+			<th scope="col">Proyecto</th>
+			<th scope="col">Perfile</th>
+				<th scope="col">Fecha Contrato</th>
+			<th scope="col">Antigüedad</th>
+			<th scope="col">Tipo Contrato</th>
+			<th scope="col">Estado</th>
+		<th scope="col">Accion</th>
+	</tr>
+</thead>
+<tbody>
+		@foreach (var appUsuario in Model.Elementos)
+		{
+			<tr>
+
+
+				<td>@appUsuario.Email</td>
+				<td>@appUsuario.NombreProyecto</td>
+				<td>@appUsuario.NombrePerfile</td>
+				<td>@appUsuario.FechaContrato</td>
+				<td>@appUsuario.Antiguedad Meses</td>
+				<td>
+						@if (@appUsuario.TipoContrato==1)
+						{
+							<p>INDEFINIDO</p>
+						}else{
+							<p>FIJO</p>
+						}
+					
+					</td>
+
+					<td>
+
+						@if (appUsuario.Estado==1)
+						{
+							<label class="badge badge-success">Activo</label>
+						}else if (appUsuario.Estado==6)
+						{
+							<label class="badge badge-danger">Desactivo</label>
+						}
+					</td>
+				<td><span>
+						<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@appUsuario.Id">
+						<i class="bi-pencil-fill"   data-toggle="tooltip" data-placement="left" title="Editar" ></i></a>
+@*
+						<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@appUsuario.Id">
+*@						
+
+							@if (appUsuario.Estado == 1)
+							{
+								<button type="button"
+								class="btn btn-secondary"
+								data-toggle="modal"
+								data-target="@("#BorrarPartialView-"+appUsuario.Id)"
+								data-url="@Url.Action($"BorrarPartialView/{appUsuario.Id}")">
+
+									<i class="bi-trash-fill"
+							   data-toggle="tooltip" data-placement="right" title="Borrar">
+									</i>
+								</button>
+								@await Html.PartialAsync("BorrarPartialView",appUsuario)
+							}
+@*
+</a>
+*@				</span></td>
+				
+			</tr>
+		}
+	</tbody>
+</table>
+</div>

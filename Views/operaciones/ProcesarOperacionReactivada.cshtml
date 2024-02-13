@@ -1,0 +1,111 @@
+﻿@model OperacionCreacionViewModel
+@{
+	ViewData["Title"] = "Aprobar Solicitud";
+}
+
+<h1>Procesar Solicitud Reactivada</h1>
+<h5>Aprobar una Solicitud reembolsable</h5>
+
+
+<form method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@*<input type="hidden" asp-for="Id" />*@
+
+
+
+	<div class="mb-3">
+		<label asp-for="Id" class="form-label"></label>
+		<input asp-for="Id" class="form-control" readonly />
+		<span asp-validation-for="Id" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="IdOperacion" class="form-label"></label>
+		<input asp-for="IdOperacion" class="form-control" readonly />
+		<span asp-validation-for="IdOperacion" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="NombreProducto" class="form-label"></label>
+		<select asp-for="IdProducto" asp-items="Model.productos" class="form-control" disabled></select>
+		<span asp-validation-for="IdProducto" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Cantidad" class="form-label"></label>
+		<input asp-for="Cantidad" class="form-control" readonly />
+		<span asp-validation-for="Cantidad" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Precio" class="form-label"></label>
+		<input asp-for="Precio" class="form-control" value=" @string.Format("{0:c0}",Model.Precio )"  readonly />
+		<span asp-validation-for="Precio" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="TotalCosto" class="form-label"></label>
+		<input asp-for="TotalCosto" class="form-control"  value=" @string.Format("{0:c0}",Model.TotalCosto )" readonly />
+		<span asp-validation-for="TotalCosto" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Descripcion" class="form-label"></label>
+		<input asp-for="Descripcion" class="form-control" readonly />
+		<span asp-validation-for="Descripcion" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="UrlDocumento" class="form-label"></label>
+
+		<span asp-validation-for="UrlDocumento" class="text-danger"></span>
+
+		<div class="card" style="width: 18rem;">
+
+			<div class="card-body">
+
+				<img src="@Model.UrlDocumento" class="card-img-top" asp-append-version="true" />
+
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="MontoReembolsado" class="form-label"></label>
+		<input asp-for="MontoReembolsado" class="form-control" id="montoReembolsado" value=" " required />
+		<p id="currency"></p>
+		<span asp-validation-summary="MontoReembolsado" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3" id="comentario">
+		<label asp-for="Comentario" class="form-label"></label>
+		<input asp-for="Comentario" class="form-control"  />
+		<span asp-validation-for="Precio" class="text-danger"></span>
+	</div>
+
+	@*<button type="submit" class="btn btn-primary">Aprobar</button>*@
+
+	
+	<button type="submit" class="btn btn-primary" asp-action="AprobarOperacionReactivada" asp-route-Id="@Model.Id">Aprobar</button>
+	<button type="submit" class="btn btn-danger" asp-action="RechazarOperacionReactivada" asp-route-Id="@Model.Id">Rechazar</button>
+	
+	@*<button type="submit" class="btn btn-warning" asp-action="OnHold" asp-route-Id="@Model.Id" >On Hold</button>*@
+	<a class="btn btn-secondary" asp-action="Index" id="cancelar">Cancelar</a>
+
+</form>
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		document.getElementById('montoReembolsado').addEventListener(
+			'change', () => {
+				document.getElementById('currency').innerHTML = new Intl.NumberFormat(
+					'es-CL', {
+					style: 'currency',
+					currency: 'CLP',
+					minimumFractionDigits: 2
+				}
+				).format(document.getElementById('montoReembolsado').value);
+			}
+		);
+	</script>
+		}

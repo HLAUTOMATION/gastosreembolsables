@@ -1,0 +1,86 @@
+﻿@model OperacionCreacionViewModel
+@{
+	ViewData["Title"]="Editar Solicitud";
+}
+
+<h1>Editar Solicitud Reactivada</h1>
+<h5>Editar una Solicitud reembolsable</h5>
+
+
+<form asp-action="EditarOperacionReactivada" enctype="multipart/form-data">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<input type="hidden" asp-for="Id" />
+
+	<div class="mb-3">
+		<label asp-for="IdProducto" class="form-label"></label>
+			<select asp-for="IdProducto" asp-items="Model.productos" class="form-control"></select>	
+		<span asp-validation-for="IdProducto" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Cantidad" class="form-label"></label>
+		<input asp-for="Cantidad" class="form-control" readonly/>
+		<span asp-validation-for="Cantidad" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Precio" class="form-label"></label>
+		<input asp-for="Precio" class="form-control" id="precio" type="number" readonly />
+		<p id="currency"></p>
+		<span asp-validation-for="Precio" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<label asp-for="FechaCompra" class="form-label"></label>
+		<input asp-for="FechaCompra" class="form-control" required />
+		<span asp-validation-for="FechaCompra" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Descripcion" class="form-label"></label>
+		<input asp-for="Descripcion" class="form-control"/>
+		<span asp-validation-for="Descripcion" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="UrlDocumento" class="form-label"></label>
+
+		<span asp-validation-for="UrlDocumento" class="text-danger"></span>
+
+		<div class="card" style="width: 18rem;">
+
+			<div class="card-body">
+
+				<img src="@Model.UrlDocumento" class="card-img-top" asp-append-version="true" />
+
+			</div>
+		</div>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Documento" class="form-label"></label>
+		<input asp-for="Documento" class="form-control" multiple />
+		<span asp-validation-for="Documento" class="text-danger"></span>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Enviar</button>
+	<a class="btn btn-secondary" asp-action="GetOperacionesByCorreoUsuario">Cancelar</a>
+</form>
+
+		@section Scripts{
+			<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		document.getElementById('precio').addEventListener(
+			'change', () => {
+				document.getElementById('currency').innerHTML = new Intl.NumberFormat(
+					'es-CL', {
+					style: 'currency',
+					currency: 'CLP',
+					minimumFractionDigits: 0
+				}
+				).format(document.getElementById('precio').value);
+			}
+		);
+
+		</script>
+		}

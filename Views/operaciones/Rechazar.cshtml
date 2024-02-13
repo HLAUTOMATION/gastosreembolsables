@@ -1,0 +1,48 @@
+﻿@model OperacionCreacionViewModel
+@{
+	ViewData["Title"] = "Rechazar Solicitud";
+}
+
+<h1>Rechazar Solicitud</h1>
+<h5>Rechazar una Solicitud reembolsable</h5>
+
+
+<form asp-action="Rechazar">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<input type="hidden" asp-for="Id" />
+
+	<div class="mb-3">
+		<label asp-for="IdProducto" class="form-label"></label>
+		<select asp-for="IdProducto" asp-items="Model.productos" class="form-control"></select>
+		<span asp-validation-for="IdProducto" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Cantidad" class="form-label"></label>
+		<input asp-for="Cantidad" class="form-control" />
+		<span asp-validation-for="Cantidad" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Precio" class="form-label"></label>
+		<input asp-for="Precio" type="currency" class="form-control" />
+		<span asp-validation-for="Precio" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="Descripcion" class="form-label"></label>
+		<input asp-for="Descripcion" class="form-control" />
+		<span asp-validation-for="Descripcion" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="UrlDocumento" class="form-label"></label>
+		<input asp-for="UrlDocumento" class="form-control" />
+		<span asp-validation-for="UrlDocumento" class="text-danger"></span>
+	</div>
+
+	<button type="submit" class="btn btn-danger">Confirmar</button>
+	<a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial" />
+		}

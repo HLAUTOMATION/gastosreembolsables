@@ -1,0 +1,144 @@
+﻿@model PaginacionRespuesta<Operacion>
+@{
+	ViewData["Title"] = "Solicitudes Procesadas";
+}
+
+<h1>Solicitudes Procesadas</h1>
+
+
+<div class="row ">
+
+
+<div class="col"><partial name="_paginacion" /></div>
+<div class="col-2">
+
+	@using(Html.BeginForm("Historia","Operaciones", FormMethod.Get)){
+			<table >
+				<tr>
+					<td>
+						@Html.TextBox("SearchValue", null,new{Class="form-control", placeholder="search"})
+					</td>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Search" class="btn btn-success"/>
+					</td>
+				</tr>
+			</table>
+	}
+		
+</div>
+
+</div>
+
+
+<div class="table-responsive">
+<table class="table table-striped">
+
+<thead>
+	<tr>
+				<th style="text-align: center" class="col-1" scope="col">Id </th>
+				<th style="text-align: center" class="col-1" scope="col">Producto</th>
+				<th style="text-align: center" class="col-1" scope="col">Cant.</th>
+@*				<th style="text-align: center" class="col-1" scope="col">Precio</th>*@
+				<th style="text-align: center" class="col-1" scope="col">Total</th>
+				<th style="text-align: center" class="col-1" scope="col">Reembolsado</th>
+				<th style="text-align: center" class="col-2" scope="col">Descripción</th>
+				<th style="text-align: center" class="col-1" scope="col">Colaborador</th>
+				<th style="text-align: center" class="col-1" scope="col">Aprobador</th>
+				<th style="text-align: center" class="col-1" scope="col">Comprobante</th>
+@*				<th style="text-align: center" class="col-1" scope="col">Fecha Compra</th>
+				<th style="text-align: center" class="col-1" scope="col">Fecha Creación</th>*@
+				<th style="text-align: center" class="col-1" scope="col">Fecha Procesada</th>
+
+				<th style="text-align: center" class="col-1" scope="col">Estado</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var operacion in Model.Elementos)
+		{
+			<tr >
+					<td class="col-1" style="text-align: center">@operacion.Id</td>
+					<td class="col-1" style="text-align: center">@operacion.NombreProducto</td>
+					<td class="col-1" style="text-align: center">@operacion.Cantidad</td>
+@*					<td style="text-align: center"> @string.Format("{0:c0}",operacion.Precio )</td>*@
+					<td class="col-1" style="text-align: center" typeof="currency"> @string.Format("{0:c0}",operacion.TotalCosto )</td>
+					<td class="col-1" style="text-align: center" typeof="currency">@string.Format("{0:c0}",operacion.MontoReembolsado ) </td>
+
+					<td class="col-2" style="text-align: center">
+						@if (operacion.Descripcion.Length>=10)
+						{
+
+							<p data-toggle="tooltip" data-placement="bottom" title="@operacion.Descripcion">	
+								@operacion.Descripcion.Substring(0, 10)...
+							</p>
+							
+							
+						}else{
+							@operacion.Descripcion
+						}
+					
+					</td>
+
+					<td class="col-1" style="text-align: center">@operacion.CorreoUsuario.Substring(0,operacion.CorreoUsuario.IndexOf("@"))</td>
+					<td class="col-1" style="text-align: center">@operacion.CorreoAdministrador.Substring(0,operacion.CorreoAdministrador.IndexOf("@"))</td>
+					<td class="col-1" style="text-align: center">
+					@*<img src="@operacion.UrlDocumento" class="img-fluid" width="40" height="40" asp-append-version="true" />*@
+						@if (string.IsNullOrEmpty(operacion.UrlDocumento))
+						{
+							<p>No hay comprobante</p>
+						}
+						else
+						{
+
+
+							<a href="@Url.Content(operacion.UrlDocumento)">
+								<i class="bi bi-images"></i>
+							</a>
+						}
+				</td>
+@*					<td style="text-align: center"> @operacion.FechaCompra.ToShortDateString()</td>
+					<td style="text-align: center"> @operacion.FechaCreacion.ToShortDateString()</td>*@
+					<td class="col-1" style="text-align: center">@operacion.FechaProcessed.ToShortDateString()</td>
+
+					<td class="col-1" style="text-align: center">
+					@if (operacion.Estado==1)
+					{
+						<label class="badge badge-success mb-3">Aprobado</label>
+						if ( operacion.operacionesReactivadas.Any() )
+						{
+						<br />
+						<a class="btn btn-link btn-sm" asp-action="Reactivaciones" asp-route-Id="@operacion.Id">Reactivaciones</a>	
+							
+						}
+					}
+					else if (operacion.Estado == 2 )
+					{
+						<label class="badge badge-danger mb-3">Rechazado</label>
+							if (operacion.operacionesReactivadas.Any())
+							{
+								<br />
+								<a class="btn btn-link btn-sm" asp-action="Reactivaciones" asp-route-Id="@operacion.Id">Reactivaciones</a>
+
+							}
+					}
+				@*	else if (operacion.Estado == 5 )
+					{
+
+							<label class="badge badge-secondary mb-3">Objetada</label>
+							<br />
+							<a class="btn btn-link btn-sm" asp-action="Reactivaciones" asp-route-Id="@operacion.Id">Reactivaciones</a>
+
+					}
+					else if (operacion.Estado == 4)
+					{
+						<label class="badge badge-secondary mb-3">Objetada</label>
+						
+					}*@
+					
+					</td>
+			</tr>
+		}
+	</tbody>
+</table>
+</div>

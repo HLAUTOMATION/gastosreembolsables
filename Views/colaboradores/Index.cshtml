@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model IEnumerable<Colaborador>
+@{
+	ViewData["Title"]="Colaboradores";
+}
+
+<h1>Colaboradores</h1>
+
+<a asp-action="Crear" class="btn btn-primary mb-3">Crear</a>
+
+<table class="table">
+
+<thead>
+	<tr>
+		
+		<th scope="col">Nombre</th>
+		<th scope="col">Perfile</th>
+		<th scope="col">Correo</th>
+		<th scope="col">Fecha Contrato</th>
+		<th scope="col">Tipo Contrato</th>
+		<th scope="col">Antiguedad</th>
+		<th scope="col">Fecha Creación</th>
+		<th scope="col">Fecha Fin</th>
+		<th scope="col">Estado</th>
+		<th scope="col">Acción</th>
+		
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var colaborador in Model)
+		{
+			<tr>
+				
+
+				<td>@colaborador.Nombre</td>
+				<td>@colaborador.IdPerfile</td>
+				<td>@colaborador.Correo</td>
+				<td>@colaborador.FechaContrato</td>
+				<td>@colaborador.IdTipoContrato</td>
+				<td>@colaborador.Antiguedad</td>
+				<td>@colaborador.FechaCreacion</td>
+				<td>@colaborador.FechaFin</td>
+				<td>@colaborador.Estado</td>
+				<td>
+					<span>
+						<a class="btn-primary btn" asp-action="Editar" asp-route-Id="@colaborador.Id">
+							<i class="bi-pencil-fill"
+							 data-toggle="tooltip" data-placement="left" title="Editar"
+							></i>
+						</a>
+						<a class="btn-secondary btn" asp-action="Borrar" asp-route-Id="@colaborador.Id">
+							<i class="bi-trash-fill"
+						   data-toggle="tooltip" data-placement="right" title="Borrar"></i>
+						</a>
+					</span>
+
+				</td>
+				
+			</tr>
+		}
+	</tbody>
+</table>

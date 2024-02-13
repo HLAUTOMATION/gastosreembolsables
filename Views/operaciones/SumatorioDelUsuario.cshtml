@@ -1,0 +1,178 @@
+﻿@model SumatorioDelUsuario
+@{
+	ViewData["Title"] = "Resumen Del Usuario";
+	
+}
+
+<h1>Resumen </h1>
+
+
+@*<div class="row">
+
+
+<div class="col-4">
+<a asp-action="Crear" class="btn btn-primary mb-3">Crear</a></div>
+<div class="col-8">
+
+	@using(Html.BeginForm("Index","Operaciones", FormMethod.Get)){
+			<table class="offset-8">
+				<tr>
+					<td>
+						@Html.TextBox("SearchValue", null,new{Class="form-control", placeholder="search"})
+					</td>
+					<td>&nbsp;</td>
+					<td>
+						<input type="submit" value="Search" class="btn btn-success"/>
+					</td>
+				</tr>
+			</table>
+	}
+		
+</div>
+</div>*@
+
+@*
+@if (TempData["AlertForBlock"] != null)
+{
+	<div class="alert alert-danger">
+		<strong> Blocked! </strong>	@TempData["AlertForBlock"]
+	</div>
+}*@
+<div><label class="badge badge-warning mb-3">Resumen de Solicitudes Pendientes</label></div>
+
+      
+<div class="table-responsive">
+<table class="table table-striped" id="resumenColaboradorPendiente">
+	
+<thead>
+	<tr>
+	@*	<th style="text-align: center" scope="col" class="col col-md-2">Id</th>*@
+		<th style="text-align: center" scope="col" class="col col-md-2">Periodo</th>
+		<th style="text-align: center" scope="col" class="col col-md-2">Producto</th>
+		<th style="text-align: center" scope="col" class="col col-md-2">Total</th>
+		<th style="text-align: center" scope="col" class="col col-md-2"></th>
+		<th style="text-align: center" scope="col" class="col col-md-2"></th>
+		
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var sumatorio in Model.SumatorioOperacionesPendientes)
+		{
+			
+				@if (sumatorio.Total>0)
+				{
+					<tr>
+	@*			<td style="text-align: center" scope="col" class="col col-md-2">@sumatorio.Id</td>*@
+				<td style="text-align: center" scope="col" class="col col-md-2">@sumatorio.YearMonth</td>
+				<td style="text-align: center" scope="col" class="col col-md-2">@sumatorio.NombreProducto</td>
+				<td style="text-align: center" class="col col-md-2" type="currency"> @string.Format("{0:c0}",sumatorio.Total )</td>
+				<th style="text-align: center" scope="col" class="col col-md-2"></th>
+				<th style="text-align: center" scope="col" class="col col-md-2"></th>						
+					</tr>
+					
+				}
+				
+		}
+			
+	</tbody>
+		<tfoot>
+			
+		<th style="text-align: center" scope="col" class="col col-md-2"  scope="row">Total</th>
+@*		<td style="text-align: center" scope="col" class="col col-md-2"></td>*@
+		<td style="text-align: center" scope="col" class="col col-md-2"></td>
+		<td style="text-align: center" scope="col" class="col col-md-2" >
+		<strong>	
+			@string.Format("{0:c0}",Model.SumatorioOperacionesPendientes.Sum(i => i.Total) )
+			</strong>
+		</td>
+		</tfoot>
+</table>
+</div>
+
+
+<div><label class="badge badge-dark mb-3">Resumen de Solicitudes Procesadas<label></label></div>
+<div class="table-responsive">
+<table class="table table-striped">
+
+	<thead>
+		<tr>
+				@*<th style="text-align: center" scope="col" class="col col-md-2">Id</th>*@
+				<th style="text-align: center" scope="col" class="col col-md-2">Periodo</th>
+				<th style="text-align: center" scope="col" class="col col-md-2">Producto</th>
+				<th style="text-align: center" scope="col" class="col col-md-2">Total</th>
+				<th style="text-align: center" scope="col" class="col col-md-2">Total Reembolsado</th>
+				<th style="text-align: center" scope="col" class="col col-md-2">Estado</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var sumatorio in Model.SumatorioOperacionesProcesadas)
+		{
+			
+				@if (sumatorio.Total>0)
+				{
+					<tr>
+						@*<td style="text-align: center" scope="col" class="col col-md-2">@sumatorio.Id</td>*@
+						<td style="text-align: center" scope="col" class="col col-md-2">@sumatorio.YearMonth</td>
+						<td style="text-align: center" scope="col" class="col col-md-2">@sumatorio.NombreProducto</td>
+						<td style="text-align: center" scope="col" class="col col-md-2">
+							@string.Format("{0:c0}",sumatorio.Total )
+							
+							</td>
+						<td style="text-align: center" scope="col" class="col col-md-2">
+							@string.Format("{0:c0}",sumatorio.MontoReembolsado )
+							
+							</td>
+						<td style="text-align: center" scope="col" class="col col-md-2">
+
+							@if (sumatorio.Estado == 1)
+							{
+								<label class="badge badge-success mb-3">Aprobado</label>
+							}
+							else if (sumatorio.Estado == 2)
+							{
+								<label class="badge badge-danger mb-3">Rechazado</label>
+							}
+							else if (sumatorio.Estado == 4)
+							{
+								<label class="badge badge-secondary mb-3">Objetada</label>
+							}
+						</td>
+					</tr>
+					<tr> </tr>
+				}
+			
+		}
+	</tbody>
+
+	<tfoot>
+			
+		<th style="text-align: center" scope="col" class="col col-md-2" scope="row">Total</th>
+@*		<td style="text-align: center" scope="col" class="col col-md-2"></td>*@
+		<td style="text-align: center" scope="col" class="col col-md-2"></td>
+		<td style="text-align: center" scope="col" class="col col-md-2" >
+		<strong>
+					@string.Format("{0:c0}",Model.SumatorioOperacionesProcesadas.Sum(i => i.Total) )
+			</strong>
+		</td>
+
+		<td style="text-align: center" scope="col" class="col col-md-2">
+			<strong>
+					@string.Format("{0:c0}",Model.SumatorioOperacionesProcesadas.Sum(i => i.MontoReembolsado) )
+			</strong>
+		</td>
+		</tfoot>
+</table>
+</div>
+
+<script>
+
+	$(document).ready(function () {
+		$('#resumenColaboradorPendiente').DataTable({
+        scrollY: '100px',
+        scrollCollapse: true,
+        paging: false,
+    });
+});
+</script>

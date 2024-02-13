@@ -1,0 +1,49 @@
+﻿
+@model AppUsuario
+@{
+	ViewData["Title"]="Editar Usuario";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	
+}
+
+<h3>Editar Usuario</h3>
+
+
+
+<form asp-action="Editar">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="Id" />
+	
+	<div class="mb-3">
+		<label asp-for="Email" class="form-label"></label>
+		@if (User.IsInRole("GastosReembolsablesAdmin"))
+		{
+			<input asp-for="Email" class="form-control" readonly />
+		}
+		else if (User.IsInRole("GeneralUser"))
+		{
+			<input asp-for="Email" class="form-control" readonly />
+		}
+		
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="FechaContrato" class="form-label"></label>
+		<input asp-for="FechaContrato" class="form-control" readonly />
+	</div>
+
+	@if (User.IsInRole("GastosReembolsablesAdmin")){
+		<button type="submit" class="btn btn-primary">Confirmar</button>
+		<a class="btn btn-success" asp-action="Login">Login</a>
+	}
+
+	
+</form>
+
+<partial name="GetCuentasByUsuario" />
+
+@section Scripts{
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	}

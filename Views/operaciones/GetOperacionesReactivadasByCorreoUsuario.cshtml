@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Operacion>
+@using System.Security.Claims
+@using GASTOS_REEMBOLSABLES_VMICA.Models;
+@{
+	ViewData["Title"] = "Solicitudes Pendientes";
+}
+
+<h1>Solicitudes Reactivadas</h1>
+<h5>Solicitudes pendientes a procesar</h5>
+<h5>Favor de no molestar Francisca antes 3 dias</h5>
+
+
+<table class="table">
+
+<thead>
+	<tr>
+		<th scope="col">Id Operacion Originale</th>
+		<th scope="col">Producto</th>
+		<th scope="col">Cantidad</th>
+		<th scope="col">Precio</th>
+		<th scope="col">Total</th>
+		<th scope="col">Descripción</th>
+		<th scope="col">Comprobante</th>
+		<th scope="col">Fecha Compra</th>
+		<th scope="col">Fecha Creación</th>
+		<th scope="col">Fecha Processada</th>
+		<th scope="col">Estado</th>
+		<th scope="col">Acción</th>
+		
+	</tr>
+</thead>
+<tbody>
+		@foreach (var operacion in Model)
+		{
+			<tr>
+				<td>@operacion.IdOperacion</td>
+				<td>@operacion.NombreProducto</td>
+				<td>@operacion.Cantidad</td>
+				<td>@string.Format("{0:c0}",@operacion.Precio )  </td>
+				<td>@string.Format("{0:c0}",@operacion.TotalCosto )</td>
+				<td>
+					@if (operacion.Descripcion.Length >= 10)
+					{
+
+						<p>	@operacion.Descripcion.Substring(0, 10)...</p>
+
+
+					}
+					else
+					{
+						@operacion.Descripcion
+					}
+
+				</td>
+				<td>
+				@*<img src="@operacion.UrlDocumento" class="rounded-circle" width="40" height="40" asp-append-version="true"/>*@
+				<img src="@Url.Content(operacion.UrlDocumento)" class="rounded-circle" width="40" height="40" />
+				</td>
+				<td>@operacion.FechaCompra.ToShortDateString()</td>
+				<td>@operacion.FechaCreacion.ToShortDateString()</td>
+				<td>@operacion.FechaProcessed.ToShortDateString()</td>
+
+				<td>@operacion.Estado</td>
+				<td><span>
+					
+					@if (User.IsInRole("GastosReembolsablesAdmin")) 
+						
+						{
+
+							<a class="btn-primary btn" asp-action="Aprobar" asp-route-Id="@operacion.Id">
+								<i class=" bi bi-clipboard-check"></i>
+							</a>
+							<a class="btn-danger btn" asp-action="Rechazar" asp-route-Id="@operacion.Id">
+								<i class="bi bi-clipboard-x"></i>
+							</a>
+						}
+						else if(User.IsInRole("GeneralUser"))
+
+
+						{
+							<a class="btn-primary btn"  asp-area=""  asp-action="Editar" asp-route-Id="@operacion.Id">
+								<i class="bi-pencil-fill"></i>
+							</a>
+							<a class="btn-secondary btn" asp-area=""  asp-action="Borrar" asp-route-Id="@operacion.Id">
+								<i class="bi-trash-fill"></i>
+							</a>
+						}
+					
+				</span></td>
+			</tr>
+		}
+	</tbody>
+</table>
