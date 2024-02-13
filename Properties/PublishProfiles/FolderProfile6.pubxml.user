@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\GR_v1_6_deploy\GASTOS_REEMBOLSABLES_VMICA\GASTOS_REEMBOLSABLES_VMICA\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2022-12-28T01:16:49.2242320Z;True|2022-12-27T22:15:11.6653336-03:00;True|2022-12-16T06:54:50.3620608-03:00;True|2022-12-14T23:37:48.6546203-03:00;True|2022-12-13T23:19:25.3360328-03:00;True|2022-12-12T07:03:37.9860076-03:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
